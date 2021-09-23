@@ -1,6 +1,6 @@
 [![Pub](https://img.shields.io/pub/v/country_code_picker.svg)](https://pub.dartlang.org/packages/country_code_picker)
 
-# country_code_picker
+# country_code_picker with custom dropdown
 
 A flutter package for showing a country code selector.
 
