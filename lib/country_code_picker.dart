@@ -27,6 +27,10 @@ class CountryCodePicker extends StatefulWidget {
   final bool enabled;
   final TextOverflow textOverflow;
   final Icon closeIcon;
+  final IconData dropDownIcon;
+
+  /// Icon color of DropDownIconColor
+  final Color? dropDownIconColor;
 
   /// Barrier color of ModalBottomSheet
   final Color? barrierColor;
@@ -118,6 +122,8 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
+    this.dropDownIconColor = Colors.black,
+    this.dropDownIcon = Icons.arrow_drop_down,
     Key? key,
   }) : super(key: key);
 
@@ -126,7 +132,7 @@ class CountryCodePicker extends StatefulWidget {
     List<Map<String, String>> jsonList = countryList;
 
     List<CountryCode> elements =
-        jsonList.map((json) => CountryCode.fromJson(json)).toList();
+    jsonList.map((json) => CountryCode.fromJson(json)).toList();
 
     if (comparator != null) {
       elements.sort(comparator);
@@ -134,12 +140,12 @@ class CountryCodePicker extends StatefulWidget {
 
     if (countryFilter != null && countryFilter!.isNotEmpty) {
       final uppercaseCustomList =
-          countryFilter!.map((c) => c.toUpperCase()).toList();
+      countryFilter!.map((c) => c.toUpperCase()).toList();
       elements = elements
           .where((c) =>
-              uppercaseCustomList.contains(c.code) ||
-              uppercaseCustomList.contains(c.name) ||
-              uppercaseCustomList.contains(c.dialCode))
+      uppercaseCustomList.contains(c.code) ||
+          uppercaseCustomList.contains(c.name) ||
+          uppercaseCustomList.contains(c.dialCode))
           .toList();
     }
 
@@ -200,7 +206,10 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                         ? selectedItem!.toCountryStringOnly()
                         : selectedItem.toString(),
                     style:
-                        widget.textStyle ?? Theme.of(context).textTheme.button,
+                    widget.textStyle ?? Theme
+                        .of(context)
+                        .textTheme
+                        .button,
                     overflow: widget.textOverflow,
                   ),
                 ),
@@ -213,8 +222,8 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                           ? const EdgeInsets.only(right: 16.0, left: 8.0)
                           : const EdgeInsets.only(right: 16.0),
                       child: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.grey,
+                        widget.dropDownIcon,
+                        color: widget.dropDownIconColor,
                         size: widget.flagWidth,
                       )),
                 ),
@@ -241,9 +250,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     if (oldWidget.initialSelection != widget.initialSelection) {
       if (widget.initialSelection != null) {
         selectedItem = elements.firstWhere(
-            (e) =>
-                (e.code!.toUpperCase() ==
-                    widget.initialSelection!.toUpperCase()) ||
+                (e) =>
+            (e.code!.toUpperCase() ==
+                widget.initialSelection!.toUpperCase()) ||
                 (e.dialCode == widget.initialSelection) ||
                 (e.name!.toUpperCase() ==
                     widget.initialSelection!.toUpperCase()),
@@ -261,9 +270,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
 
     if (widget.initialSelection != null) {
       selectedItem = elements.firstWhere(
-          (e) =>
-              (e.code!.toUpperCase() ==
-                  widget.initialSelection!.toUpperCase()) ||
+              (e) =>
+          (e.code!.toUpperCase() ==
+              widget.initialSelection!.toUpperCase()) ||
               (e.dialCode == widget.initialSelection) ||
               (e.name!.toUpperCase() == widget.initialSelection!.toUpperCase()),
           orElse: () => elements[0]);
@@ -273,11 +282,11 @@ class CountryCodePickerState extends State<CountryCodePicker> {
 
     favoriteElements = elements
         .where((e) =>
-            widget.favorite.firstWhereOrNull((f) =>
-                e.code!.toUpperCase() == f.toUpperCase() ||
-                e.dialCode == f ||
-                e.name!.toUpperCase() == f.toUpperCase()) !=
-            null)
+    widget.favorite.firstWhereOrNull((f) =>
+    e.code!.toUpperCase() == f.toUpperCase() ||
+        e.dialCode == f ||
+        e.name!.toUpperCase() == f.toUpperCase()) !=
+        null)
         .toList();
   }
 
@@ -287,33 +296,34 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
         // backgroundColor: widget.backgroundColor ?? Colors.transparent,
         context: context,
-        builder: (context) => Center(
-          child: Container(
-            constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
-            child: Dialog(
-              child: SelectionDialog(
-                elements,
-                favoriteElements,
-                showCountryOnly: widget.showCountryOnly,
-                emptySearchBuilder: widget.emptySearchBuilder,
-                searchDecoration: widget.searchDecoration,
-                searchStyle: widget.searchStyle,
-                textStyle: widget.dialogTextStyle,
-                boxDecoration: widget.boxDecoration,
-                showFlag: widget.showFlagDialog != null
-                    ? widget.showFlagDialog
-                    : widget.showFlag,
-                flagWidth: widget.flagWidth,
-                size: widget.dialogSize,
-                backgroundColor: widget.dialogBackgroundColor,
-                barrierColor: widget.barrierColor,
-                hideSearch: widget.hideSearch,
-                closeIcon: widget.closeIcon,
-                flagDecoration: widget.flagDecoration,
+        builder: (context) =>
+            Center(
+              child: Container(
+                constraints: BoxConstraints(maxHeight: 500, maxWidth: 400),
+                child: Dialog(
+                  child: SelectionDialog(
+                    elements,
+                    favoriteElements,
+                    showCountryOnly: widget.showCountryOnly,
+                    emptySearchBuilder: widget.emptySearchBuilder,
+                    searchDecoration: widget.searchDecoration,
+                    searchStyle: widget.searchStyle,
+                    textStyle: widget.dialogTextStyle,
+                    boxDecoration: widget.boxDecoration,
+                    showFlag: widget.showFlagDialog != null
+                        ? widget.showFlagDialog
+                        : widget.showFlag,
+                    flagWidth: widget.flagWidth,
+                    size: widget.dialogSize,
+                    backgroundColor: widget.dialogBackgroundColor,
+                    barrierColor: widget.barrierColor,
+                    hideSearch: widget.hideSearch,
+                    closeIcon: widget.closeIcon,
+                    flagDecoration: widget.flagDecoration,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
       ).then((e) {
         if (e != null) {
           setState(() {
@@ -328,28 +338,29 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
         backgroundColor: widget.backgroundColor ?? Colors.transparent,
         context: context,
-        builder: (context) => Center(
-          child: SelectionDialog(
-            elements,
-            favoriteElements,
-            showCountryOnly: widget.showCountryOnly,
-            emptySearchBuilder: widget.emptySearchBuilder,
-            searchDecoration: widget.searchDecoration,
-            searchStyle: widget.searchStyle,
-            textStyle: widget.dialogTextStyle,
-            boxDecoration: widget.boxDecoration,
-            showFlag: widget.showFlagDialog != null
-                ? widget.showFlagDialog
-                : widget.showFlag,
-            flagWidth: widget.flagWidth,
-            flagDecoration: widget.flagDecoration,
-            size: widget.dialogSize,
-            backgroundColor: widget.dialogBackgroundColor,
-            barrierColor: widget.barrierColor,
-            hideSearch: widget.hideSearch,
-            closeIcon: widget.closeIcon,
-          ),
-        ),
+        builder: (context) =>
+            Center(
+              child: SelectionDialog(
+                elements,
+                favoriteElements,
+                showCountryOnly: widget.showCountryOnly,
+                emptySearchBuilder: widget.emptySearchBuilder,
+                searchDecoration: widget.searchDecoration,
+                searchStyle: widget.searchStyle,
+                textStyle: widget.dialogTextStyle,
+                boxDecoration: widget.boxDecoration,
+                showFlag: widget.showFlagDialog != null
+                    ? widget.showFlagDialog
+                    : widget.showFlag,
+                flagWidth: widget.flagWidth,
+                flagDecoration: widget.flagDecoration,
+                size: widget.dialogSize,
+                backgroundColor: widget.dialogBackgroundColor,
+                barrierColor: widget.barrierColor,
+                hideSearch: widget.hideSearch,
+                closeIcon: widget.closeIcon,
+              ),
+            ),
       ).then((e) {
         if (e != null) {
           setState(() {
